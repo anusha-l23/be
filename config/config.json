@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "leanfolks@1",
+    "database": "leanfolks-demo",
+    "host": "52.15.105.30",
+    "dialect": "postgres",
+    "secret": "leanfolks"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "smarketify1$",
+    "database": "smarketify-demo",
+    "host": "52.15.105.30",
+    "dialect": "postgres",
+    "secret": "smarketify"
+  }
+}
