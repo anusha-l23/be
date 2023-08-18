@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "postgres",
-    "password": "leanfolks@1",
-    "database": "leanfolks-demo",
-    "host": "52.15.105.30",
+    "password": "leanfolks$1",
+    "database": "postgres",
+    "host": "localhost",
     "dialect": "postgres",
     "secret": "leanfolks"
   },
@@ -16,10 +16,10 @@
   },
   "production": {
     "username": "postgres",
-    "password": "smarketify1$",
-    "database": "smarketify-demo",
-    "host": "52.15.105.30",
+    "password": "leanfolks$1",
+    "database": "postgres",
+    "host": "localhost",
     "dialect": "postgres",
-    "secret": "smarketify"
+    "secret": "leanfolks"
   }
 }
