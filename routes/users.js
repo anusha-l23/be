@@ -61,9 +61,9 @@ router.post("/forgot-password", async (req, res, next) => {
 
 });
 
-router.post("/reset-password-with-token", async (req, res, next) => {
+router.post("/reset-password/:code", async (req, res, next) => {
   try {
-    const result = await resetPasswordWithToken(req.body.code, req.body.password, req.body.email);
+    const result = await resetPassword(req.body.code, req.body.password, req.body.email);
     res.send(result);
   } catch (err) {
     res.statusCode = 400;
@@ -73,21 +73,6 @@ router.post("/reset-password-with-token", async (req, res, next) => {
   }
 });
 
-router.post("/reset-password", async (req, res, next) => {
-  try {
-    const data = req.body;
-    const result = await resetPassword(
-      req.body.email,
-      req.body.oldPassword,
-      req.body.newPassword
-    );
-    res.send(result);
-  } catch (err) {
-    res.statusCode = 400;
-    res.send({
-      error: err.message,
-    });
-  }
-});
+
 
 module.exports = router;

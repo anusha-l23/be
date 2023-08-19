@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ForgotPassword.init({
-    userId: DataTypes.STRING,
+    userId: DataTypes.INTEGER,
     code: DataTypes.STRING,
     expiry: DataTypes.DATE
   }, {

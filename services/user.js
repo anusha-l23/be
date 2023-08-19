@@ -99,10 +99,8 @@ async function forgotPassword({ email }) {
           from: 'anusha.lakkakula2022@gmail.com',
           to: `${email}`,
           subject: "Reset Password Link",
-          html: `Hi, ${user.firstName}, below is your verification link for resetting the password.
-          <br/>
-    The link will be valid for 1 hour:
-      <a href="http://localhost:3000/reset-password?email=${user.email}&code=${token.code}">Reset</a>`
+          html: `Click the following link to reset your password:
+      <a href="http://localhost:3000/reset-password/${token.code}">Reset</a>`
         });
 
         return {
@@ -124,8 +122,9 @@ async function forgotPassword({ email }) {
   }
 }
 
-async function resetPasswordWithToken(code, password, email) {
+async function resetPassword(code, password, email) {
   try {
+    console.log(code, "code")
     const user = await models.User.findOne({
       where: { email },
     });
@@ -133,11 +132,10 @@ async function resetPasswordWithToken(code, password, email) {
       throw new Error("User not found");
     }
 
-    var result = await models.ForgotPasswordToken.findOne({ attributes: ['id', 'userId', 'code', 'expiryDate', 'createdAt', 'updatedAt'], where: { userId: user.id }, order: [['createdAt', 'DESC']], LIMIT: 1 })
-
+    var result = await models.ForgotPassword.findOne({ where: { userId: user.id }, order: [['createdAt', 'DESC']], LIMIT: 1 })
     if (result && result.code === code) {
 
-      if (result.expiryDate > new Date()) {
+      if (result.expiry > new Date()) {
         const passwordHash = await bcrypt.hashSync(password, 10);
         await models.User.update(
           {
@@ -165,39 +163,6 @@ async function resetPasswordWithToken(code, password, email) {
     throw err;
   }
 }
-
-
-async function resetPassword(email, oldPassword, newPassword) {
-  try {
-    const user = await models.User.findOne({
-      where: { email },
-    });
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    if (await bcrypt.compare(oldPassword, user.password)) {
-      const passwordHash = await bcrypt.hashSync(newPassword, 10);
-      const result = await models.User.update(
-        {
-          password: passwordHash,
-        },
-        { where: { id: user.id } }
-      );
-    } else {
-      throw new Error("Old password is incorrect");
-    }
-
-    return {
-      id: user.id,
-      email: email,
-    };
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
-}
-
 
 
 async function updateProfile(user) {
