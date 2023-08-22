@@ -19,7 +19,7 @@ if (userExists) {
       email,
       firstName,
       lastName,
-      password
+      password,
     } = user;
     
     const passwordHash = await bcrypt.hashSync(password, 10);
@@ -27,13 +27,13 @@ if (userExists) {
       firstName,
       lastName,
       email,
-      password: passwordHash
+     password: passwordHash
     });
 
       return {
         result,
         statusCode: 200,
-        message: "user registered successfully..." 
+        message: "user registered successfully..."
       };
 
   } catch (err) {
@@ -167,29 +167,25 @@ async function resetPassword(code, password, email) {
 
 async function updateProfile(user) {
   try {
-    const userExists = await models.User.findOne({
+    const userExist = await models.User.findOne({
       where: { email: user.email },
     });
-
-    const { firstName, lastName, bio, company, business, role } = user;
-    if (!userExists) {
+console.log(userExist, "userExist")
+    const { firstName, lastName } = user;
+    if (!user) {
       throw new Error("User not exists");
     }
 
     const result = await models.User.update(
       {
         firstName,
-        lastName,
-        bio,
-        company,
-        business,
-        role,
+        lastName
       },
-      { where: { id: userExists.id } }
+      { where: { id: userExist.id } }
     );
 
     return {
-      id: userExists.id,
+      id: userExist.id,
       ...user,
     };
   } catch (err) {
@@ -200,13 +196,13 @@ async function updateProfile(user) {
 
 async function updatePicture(user) {
   try {
-    const userExists = await models.User.findOne({
+    const userExist = await models.User.findOne({
       where: { email: user.email },
     });
 
     const { picture } = user;
 
-    if (!userExists) {
+    if (!userExist) {
       throw new Error("User not exists");
     }
 
@@ -214,11 +210,11 @@ async function updatePicture(user) {
       {
         picture,
       },
-      { where: { id: userExists.id } }
+      { where: { id: userExist.id } }
     );
 
     return {
-      id: userExists.id,
+      id: userExist.id,
       ...user,
     };
   } catch (err) {
@@ -232,4 +228,6 @@ module.exports = {
   login,
   forgotPassword,
   resetPassword,
+  updateProfile,
+  updatePicture
 };
