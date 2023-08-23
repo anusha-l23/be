@@ -102,7 +102,7 @@ router.post("/fileUpload", upload.single("file"), (req, res) => {
   try {
     s3Client.upload(params, (err, data) => {
       if (err) {
-        res.status(500).json({ error: "Error -> " + err });
+        res.status(500).send({error: err.message});
       }
       updatePicture(data.Location);
       res.send({
