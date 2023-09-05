@@ -196,25 +196,25 @@ console.log(userExist, "userExist")
 
 async function updatePicture(user) {
   try {
-    const userExist = await models.User.findOne({
-      where: { email: user.email },
-    });
+    // const userExist = await models.User.findOne({
+    //   where: { email: user.email },
+    // });
 
     const { picture } = user;
 
-    if (!userExist) {
-      throw new Error("User not exists");
-    }
-
+    // if (!userExist) {
+    //   throw new Error("User not exists");
+    // }
+//console.log(userExist, "userexist")
     const result = await models.User.update(
       {
         picture,
       },
-      { where: { id: userExist.id } }
+      { where: {} }
     );
 
     return {
-      id: userExist.id,
+  //  id: userExist.id,
       ...user,
     };
   } catch (err) {

@@ -11,7 +11,8 @@ const {
 
 const AWS = require("aws-sdk");
 const multer = require("multer");
-
+const path = require("path");
+const fs = require("fs");
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
@@ -81,42 +82,51 @@ res.send(result);
 
 
 const storage = multer.diskStorage({
-  destination: "uploads/",
+  destination: "uploadsimages/",
   filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
 });
-const upload = multer({ storage });
 
+const upload = multer({ storage });
 const s3Client = new AWS.S3({
-//  accessKeyId: "AKIA4OJLAZKOQH7ZZIKR",
-//  secretAccessKey: "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",
+accessKeyId: "AKIAZI5MCZIFLLONLSQC",
+secretAccessKey: "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",
 });
 
-router.post("/fileUpload", upload.single("file"), (req, res) => {
+router.post("/fileUpload", upload.single("picture"), async(req, res) => {
+console.log(req.file, "file")
+if (req.file == null) {
+  return res.status(400).json({ 'message': 'Please choose the file' })
+}
+const file = req.file;
   let params = {
-    // Bucket: "smarketify-assets",
-    // Key: "jpg",
-    Body: "file",
+    Bucket: "lean-ai-web",
+    Key: file.filename,
+    Body: fs.createReadStream(file.path),
+   // acl:"public-read"
   };
   try {
-    s3Client.upload(params, (err, data) => {
+    s3Client.upload(params, async(err, data) => {
       if (err) {
         res.status(500).send({error: err.message});
       }
-      updatePicture(data.Location);
+      console.log(data,"data")
+      await updatePicture(data.Location);
       res.send({
-        message: "File uploaded successfully",
+        message: "Profile picture uploaded to S3 and user profile updated successfully!",
         location: data.Location,
       });
-      console.log(data.Location);
+      console.log(data.Location, "location");
+ 
     });
-  } catch (err) {
+
+ } catch (err) {
     res.statusCode = 400;
     res.send({
       error: err.message,
     });
   }
-});
+})
 
 module.exports = router;
