@@ -82,7 +82,9 @@ res.send(result);
 
 
 const storage = multer.diskStorage({
-  destination: "uploadsimages/",
+  destination: (req, file, cb) => {
+    cb(null, "uploadsimages/");
+  },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
