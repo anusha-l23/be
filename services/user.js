@@ -170,8 +170,8 @@ async function updateProfile(user) {
     const userExist = await models.User.findOne({
       where: { email: user.email },
     });
-console.log(userExist, "userExist")
-    const { firstName, lastName } = user;
+
+    const { firstName, lastName, picture } = user;
     if (!user) {
       throw new Error("User not exists");
     }
@@ -179,7 +179,8 @@ console.log(userExist, "userExist")
     const result = await models.User.update(
       {
         firstName,
-        lastName
+        lastName,
+        picture
       },
       { where: { id: userExist.id } }
     );
@@ -196,16 +197,9 @@ console.log(userExist, "userExist")
 
 async function updatePicture(user) {
   try {
-    // const userExist = await models.User.findOne({
-    //   where: { email: user.email },
-    // });
 
     const { picture } = user;
 
-    // if (!userExist) {
-    //   throw new Error("User not exists");
-    // }
-//console.log(userExist, "userexist")
     const result = await models.User.update(
       {
         picture,
@@ -214,7 +208,6 @@ async function updatePicture(user) {
     );
 
     return {
-  //  id: userExist.id,
       ...user,
     };
   } catch (err) {
