@@ -7,6 +7,8 @@ const {
   resetPassword,
   updatePicture,
   updateProfile,
+  userVerify,
+  resendEmail
 } = require("../services/user");
 
 const AWS = require("aws-sdk");
@@ -30,6 +32,31 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
+
+router.get("/userVerification", async (req, res, next) => {
+  try {
+    const data = req.query;
+    const result = await userVerify(data);
+
+    return res.status(result.statusCode).send(result);
+
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
+router.post("/resend-email-verify", async (req, res, next) => {
+  try {
+    const data = req.body;
+    const result = await resendEmail(data);
+    res.send(result);
+  } catch (err) {
+    res.statusCode = 400;
+    res.send({
+      error: err.message,
+    });
+  }
+});
 
 router.post("/login", async (req, res, next) => {
   try {
