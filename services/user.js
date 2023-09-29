@@ -171,7 +171,8 @@ async function resendEmail({ email }) {
    <br/>
    verification code: ${resendToken.code}.
           <br/>
-      Alternatively, Please click the link to verify your email id ${user.email}, the link will be valid for 15 minutes:
+          <br/>
+          Alternatively, Please click on the link to verify the account.
       <a href="http://localhost:3000/userVerification?email=${user.email}&code=${resendToken.code}">Verify</a>`
         });
 
