@@ -28,7 +28,7 @@ async function register(user) {
       firstName,
       lastName,
       email,
-      isEmailVerified,
+      isEmailVerified: false,
       password: passwordHash
     });
 
@@ -39,7 +39,6 @@ async function register(user) {
         expiry: new Date(Date.now() + 3600000)
       })
 
-      console.log(setCode, "email")
       if (setCode) {
         sendingMail({
           from: process.env.EMAIL_USER,
@@ -254,7 +253,12 @@ async function forgotPassword({ email }) {
     const user = await models.User.findOne({
       where: { email },
     });
-
+    if (user && !user.isEmailVerified) {
+      return {
+        statusCode: 400,
+        message: 'Email is not confirmed. Check your email'
+      }
+    }
     if (user) {
       let token = await models.ForgotPassword.create({
         userId: user.id,
